@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Prediction History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+</head>
+
+<body>
+<div class="brand">
+
+    <img src="{{ url_for('static',
+    filename='images/logo.png') }}">
+
+    <div>
+
+        <h1>Student Performance</h1>
+
+        <h3>Prediction System</h3>
+
+    </div>
+
+</div>
+<div class="history-container">
+
+        <h2>Prediction History</h2>
+   {% for session_id,
+session_predictions
+in grouped_predictions.items() %}
+
+<div class="session-card">
+
+    <h3>
+
+        Prediction Session
+
+        {{ session_predictions[0]
+        .created_at.strftime(
+        '%d %b %Y %I:%M %p'
+        ) }}
+
+    </h3>
+
+    <table>
+
+        <tr>
+
+            <th>Course Code</th>
+
+            <th>Course Name</th>
+
+            <th>Score</th>
+
+            <th>Grade</th>
+
+        </tr>
+
+        {% for prediction
+        in session_predictions %}
+
+        <tr>
+
+            <td>
+                {{ prediction.course_code }}
+            </td>
+
+            <td>
+                {{ prediction.course_name }}
+            </td>
+
+            <td>
+                {{ "%.2f"|format(
+                prediction.predicted_score
+                ) }}%
+            </td>
+
+                <td>
+    {% if prediction.predicted_grade == "A" %}
+        <span style="color:green;font-weight:bold;">
+            {{ prediction.predicted_grade }}
+        </span>
+
+    {% elif prediction.predicted_grade == "B+" %}
+        <span style="color:#22c55e;font-weight:bold;">
+            {{ prediction.predicted_grade }}
+        </span>
+
+    {% elif prediction.predicted_grade == "B" %}
+        <span style="color:#2563eb;font-weight:bold;">
+            {{ prediction.predicted_grade }}
+        </span>
+
+    {% else %}
+        <span style="color:#dc2626;font-weight:bold;">
+            {{ prediction.predicted_grade }}
+        </span>
+    {% endif %}
+</td>
+                </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+<br>
+
+{% endfor %}
+
+        <br>
+
+        <a href="/dashboard">
+
+            <button>
+                Back to Dashboard
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+<footer>
+
+    © 2026 Student Performance Prediction System
+
+    Version 1.0 | Developed by Nathaniel Ampadu
+
+</footer>
+</body>
+
+</html>

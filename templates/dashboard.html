@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="dashboard-header">
+
+    <div class="system-title">
+
+        <img src="{{ url_for('static',
+        filename='images/logo.png') }}">
+
+        <div>
+
+            <h2>Student Performance Prediction System</h2>
+
+            <p>Academic Performance Analytics Portal</p>
+
+        </div>
+
+    </div>
+
+    <div class="header-buttons">
+
+        <a href="/history">
+            <button class="history-btn">
+                History
+            </button>
+        </a>
+
+        <a href="/download-report">
+            <button class="pdf-btn">
+                Download PDF
+            </button>
+        </a>
+<a href="/help">
+
+    <button class="help-btn">
+        ?
+    </button>
+</a>
+        <a href="/logout">
+            <button class="logout-btn">
+                Logout
+            </button>
+        </a>
+
+    </div>
+
+</div>
+    <div class="welcome-card">
+
+    <h1>
+        Hello {{ session['fullname'] }} 👋
+    </h1>
+
+    <p>
+        Predict your course grades and monitor your academic progress.
+    </p>
+
+</div>
+    <div class="dashboard-card">
+    
+    <hr>
+
+    <form id="predictionForm">
+
+        <table border="1" cellpadding="10">
+
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Assignment Scores</th>
+                    <th>Quiz Scores</th>
+                    <th>Project Scores</th>
+                </tr>
+            </thead>
+
+            <tbody id="courseTable">
+
+                <tr>
+
+                    <td>
+                        <input type="text">
+                    </td>
+
+                    <td>
+                        <input type="text">
+                    </td>
+
+                    <td>
+                        <input type="text"
+                        class="score-input"
+                        onblur="calculateAverage(this)"
+                        placeholder="Eg. 20/25,18/20">
+                    </td>
+                    
+                    <td>
+                        <input type="text"
+                        class="score-input"
+                        onblur="calculateAverage(this)"
+                        placeholder="Eg. 20/25,18/20">
+                    </td>
+                    
+                    <td>
+                        <input type="text"
+                        class="score-input"
+                        onblur="calculateAverage(this)"
+                        placeholder="Eg. 20/25,18/20">
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <br>
+
+        <button type="button"
+                onclick="addRow()">
+
+            Add Course
+
+        </button>
+       
+        <button type="button"
+        onclick="predictGrades()">
+
+    Predict Grades
+
+</button>
+
+</form>
+
+<hr>
+
+<h2 id="resultsTitle"
+style="display:none;">
+
+Prediction Results
+
+</h2>
+
+<div id="results">
+
+</div>
+<br>
+
+<a href="/download-report">
+
+    <button type="button">
+        Download Report
+    </button>
+
+</a>
+</div>
+
+</div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <footer>
+
+    © 2026 Student Performance Prediction System
+
+    Version 1.0 | Developed by Nathaniel Ampadu
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Help & User Guide</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="history-container">
+
+    <div class="history-header">
+
+        <h2>
+            Help & User Guide
+        </h2>
+
+        <a href="/dashboard">
+
+            <button>
+                Back to Dashboard
+            </button>
+
+        </a>
+
+    </div>
+
+    <h3>About the System</h3>
+
+    <p>
+        The Student Performance Prediction System helps students estimate their likely final course grades using continuous assessment records such as assignments, quizzes and projects.
+    </p>
+
+    <h3>How to Use the System</h3>
+
+    <ol>
+
+        <li>
+            Enter the Course Code and Course Name.
+        </li>
+
+        <li>
+            Enter assignment, quiz and project scores.
+        </li>
+
+        <li>
+            Multiple scores should be separated with commas.
+        </li>
+
+        <li>
+            Fractions such as 78/90 are accepted and automatically converted into percentages.
+        </li>
+
+        <li>
+            If an assessment was missed, enter 0.
+        </li>
+
+        <li>
+            If a category is unavailable, leave it blank.
+        </li>
+
+        <li>
+            Click Predict Grades.
+        </li>
+
+        <li>
+            View your predicted score, grade, remarks and recommendations.
+        </li>
+
+    </ol>
+
+    <h3>Video Tutorial</h3>
+
+    <p>
+        Watch the tutorial video here:
+    </p>
+
+    <p>
+        <a href="#">
+
+            YouTube Tutorial Link
+
+        </a>
+    </p>
+
+</div>
+<footer>
+
+    © 2026 Student Performance Prediction System
+
+    Version 1.0 | Developed by Nathaniel Ampadu
+
+</footer>
+</body>
+
+</html>
