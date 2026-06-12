@@ -289,7 +289,6 @@ def history():
         grouped_predictions=grouped_predictions
     )
 
-#SAVE ROUTE
 @app.route('/save-predictions', methods=['POST'])
 def save_predictions():
 
@@ -297,20 +296,22 @@ def save_predictions():
         return {"message": "Not logged in"}, 401
 
     data = request.get_json()
+
     session_id = str(uuid.uuid4())
+
     for item in data:
 
-       prediction = Prediction(
+        prediction = Prediction(
 
-    user_id=session['user_id'],
-    session_id=session_id,
-    course_code=item['course_code'],
-    course_name=item['course_name'],
-    predicted_score=item['predicted_score'],
-    predicted_grade=item['predicted_grade']
-)
+            user_id=session['user_id'],
+            session_id=session_id,
+            course_code=item['course_code'],
+            course_name=item['course_name'],
+            predicted_score=item['predicted_score'],
+            predicted_grade=item['predicted_grade']
+        )
 
-    db.session.add(prediction)
+        db.session.add(prediction)
 
     db.session.commit()
 
@@ -326,4 +327,11 @@ def help_page():
     return render_template('help.html')
 
 if __name__ == '__main__':    
+   
+    import os
+
+    app.config['SECRET_KEY'] = os.environ.get(
+    'SECRET_KEY',
+    'my_local_secret_key'
+)
     app.run(debug=True)
