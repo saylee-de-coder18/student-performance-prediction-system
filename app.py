@@ -5,13 +5,25 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import uuid
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
 app = Flask(__name__)
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'ampadunathaniel18@gmail.com'
+app.config['MAIL_PASSWORD'] = 'FDVNI6XJICZKVIEIQVP3ZMM45WIX7FAH'
+app.config['MAIL_DEFAULT_SENDER'] = 'ampadunathaniel18@gmail.com'
 app.config['SECRET_KEY'] = 'student_prediction_secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+mail = Mail(app)
+serializer = URLSafeTimedSerializer(
+    app.config['SECRET_KEY']
+)
 db = SQLAlchemy(app)
 
 class User(db.Model):
