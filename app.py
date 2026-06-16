@@ -301,6 +301,7 @@ def history():
         grouped_predictions=grouped_predictions
     )
 
+#SAVE ROUTE
 @app.route('/save-predictions', methods=['POST'])
 def save_predictions():
 
@@ -337,6 +338,99 @@ def help_page():
         return redirect('/login')
 
     return render_template('help.html')
+
+#FORGOT PW ROUTE
+@app.route('/forgot-password',
+methods=['GET', 'POST'])
+def forgot_password():
+
+    if request.method == 'POST':
+
+        email = request.form['email']
+
+        user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if user:
+
+            token = serializer.dumps(
+                email,
+                salt='password-reset'
+            )
+
+            reset_link = url_for(
+                'reset_password',
+                token=token,
+                _external=True
+            )
+
+            msg = Message(
+                'Password Reset Request',
+                recipients=[email]
+            )
+
+            msg.body = f'''
+Hello,
+
+Click the link below to reset your password:
+
+{reset_link}
+
+If you did not request this,
+please ignore this email.
+'''
+
+            mail.send(msg)
+
+        return render_template(
+            'forgot_password.html',
+            message=
+            'If this email exists, a reset link has been sent.'
+        )
+
+    return render_template(
+        'forgot_password.html'
+    )
+
+#RESET PW ROUTE
+@app.route(
+'/reset-password/<token>',
+methods=['GET', 'POST']
+)
+def reset_password(token):
+
+    try:
+
+        email = serializer.loads(
+            token,
+            salt='password-reset',
+            max_age=3600
+        )
+
+    except:
+
+        return 'Reset link expired.'
+
+    user = User.query.filter_by(
+        email=email
+    ).first()
+
+    if request.method == 'POST':
+
+        password = request.form['password']
+
+        user.password = generate_password_hash(
+            password
+        )
+
+        db.session.commit()
+
+        return redirect('/login')
+
+    return render_template(
+        'reset_password.html'
+    )
 
 if __name__ == '__main__':    
    
