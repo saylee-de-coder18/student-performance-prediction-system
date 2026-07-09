@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, send_file
+from flask import Flask, render_template, request, redirect, session, send_file, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
@@ -7,6 +7,7 @@ from datetime import datetime
 import uuid
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
+import os
 
 app = Flask(__name__)
 
@@ -14,10 +15,15 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'ampadunathaniel18@gmail.com'
-app.config['MAIL_PASSWORD'] = 'FDVNI6XJICZKVIEIQVP3ZMM45WIX7FAH'
+app.config['MAIL_PASSWORD'] = 'gicx kvgd ocze hdgz'
 app.config['MAIL_DEFAULT_SENDER'] = 'ampadunathaniel18@gmail.com'
 app.config['SECRET_KEY'] = 'student_prediction_secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 mail = Mail(app)
