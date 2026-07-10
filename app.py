@@ -400,12 +400,18 @@ If you did not request this,
 please ignore this email.
 '''
 
-            mail.send(msg)
+            try:
+                mail.send(msg)
+                print("Email sent successfully!")
+
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                print(f"MAIL ERROR: {e}")
 
         return render_template(
             'forgot_password.html',
-            message=
-            'If this email exists, a reset link has been sent.'
+            message='If this email exists, a reset link has been sent.'
         )
 
     return render_template(
