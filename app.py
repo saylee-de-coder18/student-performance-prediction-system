@@ -14,10 +14,13 @@ app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'ampadunathaniel18@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gicx kvgd ocze hdgz'
-app.config['MAIL_DEFAULT_SENDER'] = 'ampadunathaniel18@gmail.com'
-app.config['SECRET_KEY'] = 'student_prediction_secret'
+app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_USERNAME")
+
+app.config['SECRET_KEY'] = os.environ.get(
+    "SECRET_KEY",
+    "student_prediction_secret")
 database_url = os.environ.get("DATABASE_URL")
 
 if database_url:
