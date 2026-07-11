@@ -5,20 +5,16 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 import uuid
-from flask_mail import Mail, Message
+import smtplib
+import ssl
+from email.message import EmailMessage
 from itsdangerous import URLSafeTimedSerializer
 import os
 
 app = Flask(__name__)
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-
-app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get("MAIL_USERNAME")
+MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 
 app.config['SECRET_KEY'] = os.environ.get(
     "SECRET_KEY",
@@ -39,7 +35,7 @@ else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-mail = Mail(app)
+
 serializer = URLSafeTimedSerializer(
     app.config['SECRET_KEY']
 )
@@ -91,6 +87,39 @@ class Prediction(db.Model):
         db.DateTime,
         default=datetime.utcnow
     )
+
+def send_reset_email(recipient, reset_link):
+    msg = EmailMessage()
+
+    msg["Subject"] = "Password Reset Request"
+
+    msg["From"] = MAIL_USERNAME
+
+    msg["To"] = recipient
+
+    msg.set_content(f"""
+Hello,
+
+You requested to reset your password.
+
+Click the link below:
+
+{reset_link}
+
+If you did not request this, please ignore this email.
+
+Student Performance Prediction System
+""")
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+
+        server.starttls(context=context)
+
+        server.login(MAIL_USERNAME, MAIL_PASSWORD)
+
+        server.send_message(msg)
 
 # HOME ROUTE
 @app.route('/')
@@ -384,36 +413,10 @@ def forgot_password():
                 _external=True
             )
 
-            msg = Message(
-                'Password Reset Request',
-                recipients=[email]
+            send_reset_email(
+                email,
+                reset_link
             )
-
-            msg.body = f'''
-Hello,
-
-Click the link below to reset your password:
-
-{reset_link}
-
-If you did not request this,
-please ignore this email.
-'''
-
-            try:
-                mail.send(msg)
-                print("Email sent successfully!")
-
-            except Exception as e:
-                import traceback
-                traceback.print_exc()
-                print(f"MAIL ERROR: {e}")
-
-        return render_template(
-            'forgot_password.html',
-            message='If this email exists, a reset link has been sent.'
-        )
-
     return render_template(
         'forgot_password.html'
     )
