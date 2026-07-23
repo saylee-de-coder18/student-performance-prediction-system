@@ -514,3 +514,151 @@ footer{
         0.08
     );
 }
+
+/* =========================================================
+   ASSESSMENT SUMMARY
+========================================================= */
+
+.assessment-summary {
+
+    margin-top: 15px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+}
+
+
+.assessment-summary h4 {
+
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+}
+
+
+.assessment-summary p {
+
+    margin: 8px 0;
+
+}
+
+
+/* =========================================================
+   FULL ANALYSIS TOGGLE BUTTON
+========================================================= */
+
+.analysis-toggle {
+
+    display: block;
+
+    margin: 18px auto 10px auto;
+
+    padding: 8px 18px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: all 0.3s ease;
+
+}
+
+
+.analysis-toggle:hover {
+
+    transform: translateY(-2px);
+
+}
+
+
+/* =========================================================
+   FULL ANALYSIS SECTION
+========================================================= */
+
+.full-analysis {
+
+    margin-top: 10px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    animation: analysisFadeIn 0.3s ease;
+
+}
+
+
+.full-analysis h4 {
+
+    margin-top: 15px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.full-analysis p {
+
+    margin: 8px 0;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   GRADE TARGETS
+========================================================= */
+
+.grade-targets {
+
+    margin-top: 10px;
+
+    padding: 10px;
+
+}
+
+
+.grade-targets p {
+
+    margin: 8px 0;
+
+}
+
+
+/* =========================================================
+   ANALYSIS ANIMATION
+========================================================= */
+
+@keyframes analysisFadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-5px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}

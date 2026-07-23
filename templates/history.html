@@ -64,9 +64,11 @@ in grouped_predictions.items() %}
 
             <th>Course Name</th>
 
-            <th>Score</th>
+            <th>Assessment Score</th>
 
-            <th>Grade</th>
+            <th>Performance</th>
+
+            <th>Projected Grade</th>
 
         </tr>
 
@@ -75,44 +77,61 @@ in grouped_predictions.items() %}
 
         <tr>
 
-            <td>
-                {{ prediction.course_code }}
-            </td>
+    <td>
+        {{ prediction.course_code }}
+    </td>
 
-            <td>
-                {{ prediction.course_name }}
-            </td>
+    <td>
+        {{ prediction.course_name }}
+    </td>
 
-            <td>
-                {{ "%.2f"|format(
-                prediction.predicted_score
-                ) }}%
-            </td>
+    <td>
+        {{ "%.2f"|format(
+        prediction.assessment_score
+        ) }}
+        /
+        {{ "%.2f"|format(
+        prediction.assessment_weight
+        ) }}
+    </td>
 
-                <td>
-    {% if prediction.predicted_grade == "A" %}
-        <span style="color:green;font-weight:bold;">
-            {{ prediction.predicted_grade }}
-        </span>
+    <td>
+        {{ "%.2f"|format(
+        prediction.assessment_performance
+        ) }}%
+    </td>
 
-    {% elif prediction.predicted_grade == "B+" %}
-        <span style="color:#22c55e;font-weight:bold;">
-            {{ prediction.predicted_grade }}
-        </span>
+    <td>
 
-    {% elif prediction.predicted_grade == "B" %}
-        <span style="color:#2563eb;font-weight:bold;">
-            {{ prediction.predicted_grade }}
-        </span>
+        {% if prediction.predicted_grade == "A" %}
 
-    {% else %}
-        <span style="color:#dc2626;font-weight:bold;">
-            {{ prediction.predicted_grade }}
-        </span>
-    {% endif %}
-</td>
-                </tr>
+            <span style="color:green;font-weight:bold;">
+                {{ prediction.predicted_grade }}
+            </span>
 
+        {% elif prediction.predicted_grade == "B+" %}
+
+            <span style="color:#22c55e;font-weight:bold;">
+                {{ prediction.predicted_grade }}
+            </span>
+
+        {% elif prediction.predicted_grade == "B" %}
+
+            <span style="color:#2563eb;font-weight:bold;">
+                {{ prediction.predicted_grade }}
+            </span>
+
+        {% else %}
+
+            <span style="color:#dc2626;font-weight:bold;">
+                {{ prediction.predicted_grade }}
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
         {% endfor %}
 
     </table>

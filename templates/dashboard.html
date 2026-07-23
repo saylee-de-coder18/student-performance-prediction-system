@@ -79,54 +79,176 @@
 
         <table border="1" cellpadding="10">
 
-            <thead>
-                <tr>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    <th>Assignment Scores</th>
-                    <th>Quiz Scores</th>
-                    <th>Project Scores</th>
-                </tr>
-            </thead>
+    <thead>
 
-            <tbody id="courseTable">
+        <tr>
 
-                <tr>
+            <th rowspan="2">
+                Course Code
+            </th>
 
-                    <td>
-                        <input type="text">
-                    </td>
+            <th rowspan="2">
+                Course Name
+            </th>
 
-                    <td>
-                        <input type="text">
-                    </td>
+            <th colspan="2">
+                Assignments
+            </th>
 
-                    <td>
-                        <input type="text"
-                        class="score-input"
-                        onblur="calculateAverage(this)"
-                        placeholder="Eg. 20/25,18/20">
-                    </td>
-                    
-                    <td>
-                        <input type="text"
-                        class="score-input"
-                        onblur="calculateAverage(this)"
-                        placeholder="Eg. 20/25,18/20">
-                    </td>
-                    
-                    <td>
-                        <input type="text"
-                        class="score-input"
-                        onblur="calculateAverage(this)"
-                        placeholder="Eg. 20/25,18/20">
-                    </td>
+            <th colspan="2">
+                Quizzes
+            </th>
 
-                </tr>
+            <th colspan="2">
+                Projects
+            </th>
 
-            </tbody>
+        </tr>
 
-        </table>
+        <tr>
+
+            <th>
+                Scores
+            </th>
+
+            <th>
+                Weight (%)
+            </th>
+
+            <th>
+                Scores
+            </th>
+
+            <th>
+                Weight (%)
+            </th>
+
+            <th>
+                Scores
+            </th>
+
+            <th>
+                Weight (%)
+            </th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody id="courseTable">
+
+        <tr>
+
+            <!-- COURSE CODE -->
+
+            <td>
+
+                <input
+                    type="text"
+                    class="course-code"
+                    placeholder="Eg. DCIT 301">
+
+            </td>
+
+
+            <!-- COURSE NAME -->
+
+            <td>
+
+                <input
+                    type="text"
+                    class="course-name"
+                    placeholder="Eg. Database Systems">
+
+            </td>
+
+
+            <!-- ASSIGNMENT SCORES -->
+
+            <td>
+
+                <input
+                    type="text"
+                    class="score-input assignment-score"
+                    placeholder="Eg. 20/25, 18/20">
+
+            </td>
+
+
+            <!-- ASSIGNMENT WEIGHT -->
+
+            <td>
+
+                <input
+                    type="number"
+                    class="weight-input assignment-weight"
+                    placeholder="15"
+                    min="0"
+                    max="100"
+                    step="0.01">
+
+            </td>
+
+
+            <!-- QUIZ SCORES -->
+
+            <td>
+
+                <input
+                    type="text"
+                    class="score-input quiz-score"
+                    placeholder="Eg. 20/25, 18/20">
+
+            </td>
+
+
+            <!-- QUIZ WEIGHT -->
+
+            <td>
+
+                <input
+                    type="number"
+                    class="weight-input quiz-weight"
+                    placeholder="10"
+                    min="0"
+                    max="100"
+                    step="0.01">
+
+            </td>
+
+
+            <!-- PROJECT SCORES -->
+
+            <td>
+
+                <input
+                    type="text"
+                    class="score-input project-score"
+                    placeholder="Eg. 20/25, 18/20">
+
+            </td>
+
+
+            <!-- PROJECT WEIGHT -->
+
+            <td>
+
+                <input
+                    type="number"
+                    class="weight-input project-weight"
+                    placeholder="25"
+                    min="0"
+                    max="100"
+                    step="0.01">
+
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
 
         <br>
 

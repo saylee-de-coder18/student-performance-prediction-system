@@ -58,11 +58,12 @@ class Prediction(db.Model):
         db.Integer,
         nullable=False
     )
- 
+
     session_id = db.Column(
-    db.String(50),
-    nullable=False
-)
+        db.String(50),
+        nullable=False
+    )
+
     course_code = db.Column(
         db.String(20),
         nullable=False
@@ -73,11 +74,80 @@ class Prediction(db.Model):
         nullable=False
     )
 
-    predicted_score = db.Column(
+    # Assessment summary
+    assessment_score = db.Column(
         db.Float,
         nullable=False
     )
 
+    assessment_weight = db.Column(
+        db.Float,
+        nullable=False
+    )
+
+    assessment_performance = db.Column(
+        db.Float,
+        nullable=False
+    )
+
+    # Detailed assessment analysis
+    assignment_average = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    assignment_weight = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    assignment_contribution = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    quiz_average = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    quiz_weight = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    quiz_contribution = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    project_average = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    project_weight = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    project_contribution = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    # Examination planning
+    exam_weight = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    maximum_possible_score = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    # Final projected grade
     predicted_grade = db.Column(
         db.String(5),
         nullable=False
@@ -209,6 +279,27 @@ def logout():
 with app.app_context():
         db.create_all()
 
+def get_remark(grade):
+    if grade == "A":
+        return "Excellent Performance"
+    elif grade == "B+":
+        return "Very Good Performance"
+    elif grade == "B":
+        return "Good Performance"
+    elif grade == "C+":
+        return "Fairly Good Performance"
+    elif grade == "C":
+        return "Satisfactory Performance"
+    elif grade == "D+":
+        return "Below Average"
+    elif grade == "D":
+        return "Academic Risk"
+    elif grade == "E":
+        return "High Academic Risk"
+    else:
+        return "Immediate Improvement Required"
+
+
 #PDF REPORT ROUTE
 @app.route('/download-report')
 def download_report():
@@ -218,7 +309,13 @@ def download_report():
 
     pdf_file = "Student_Report.pdf"
 
-    doc = SimpleDocTemplate(pdf_file)
+    doc = SimpleDocTemplate(
+        pdf_file,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40
+    )
 
     styles = getSampleStyleSheet()
 
@@ -231,7 +328,14 @@ def download_report():
 
     predictions = Prediction.query.filter_by(
         user_id=session['user_id']
+    ).order_by(
+        Prediction.created_at.desc()
     ).all()
+
+
+    # -------------------------------------------------
+    # REPORT TITLE
+    # -------------------------------------------------
 
     content.append(
         Paragraph(
@@ -240,7 +344,14 @@ def download_report():
         )
     )
 
-    content.append(Spacer(1, 20))
+    content.append(
+        Spacer(1, 15)
+    )
+
+
+    # -------------------------------------------------
+    # STUDENT INFORMATION
+    # -------------------------------------------------
 
     content.append(
         Paragraph(
@@ -249,7 +360,14 @@ def download_report():
         )
     )
 
-    content.append(Spacer(1, 20))
+    content.append(
+        Spacer(1, 20)
+    )
+
+
+    # -------------------------------------------------
+    # NO PREDICTIONS
+    # -------------------------------------------------
 
     if len(predictions) == 0:
 
@@ -260,36 +378,112 @@ def download_report():
             )
         )
 
+
+    # -------------------------------------------------
+    # PREDICTION RESULTS
+    # -------------------------------------------------
+
     else:
 
         for prediction in predictions:
 
+
+            # COURSE TITLE
+
             content.append(
                 Paragraph(
-                    f"<b>{prediction.course_code}</b> - {prediction.course_name}",
+                    f"<b>{prediction.course_code}</b> - "
+                    f"{prediction.course_name}",
                     styles['Heading3']
                 )
             )
 
             content.append(
+                Spacer(1, 8)
+            )
+
+
+            # ASSESSMENT SUMMARY
+
+            content.append(
                 Paragraph(
-                    f"Predicted Score: {prediction.predicted_score:.2f}%",
-                    styles['Normal']
+                    "<b>Assessment Summary</b>",
+                    styles['Heading4']
                 )
             )
 
             content.append(
+                Spacer(1, 5)
+            )
+
+
+            # ASSESSMENT SCORE
+
+            content.append(
                 Paragraph(
-                    f"Predicted Grade: {prediction.predicted_grade}",
+                    f"<b>Assessment Score:</b> "
+                    f"{prediction.assessment_score:.2f} / "
+                    f"{prediction.assessment_weight:.2f}",
                     styles['Normal']
                 )
             )
 
+
+            # ASSESSMENT PERFORMANCE
+
             content.append(
                 Paragraph(
-                    f"Date Generated: {prediction.created_at.strftime('%d %b %Y %I:%M %p')}",
+                    f"<b>Assessment Performance:</b> "
+                    f"{prediction.assessment_performance:.2f}%",
                     styles['Normal']
                 )
+            )
+
+
+            # PROJECTED GRADE
+
+            content.append(
+                Paragraph(
+                    f"<b>Projected Grade:</b> "
+                    f"{prediction.predicted_grade}",
+                    styles['Normal']
+                )
+            )
+
+
+            # REMARK
+
+            remark = get_remark(
+                prediction.predicted_grade
+            )
+
+            content.append(
+                Paragraph(
+                    f"<b>Remark:</b> {remark}",
+                    styles['Normal']
+                )
+            )
+
+
+            # DATE
+
+            content.append(
+                Spacer(1, 8)
+            )
+
+            content.append(
+                Paragraph(
+                    f"<b>Date Generated:</b> "
+                    f"{prediction.created_at.strftime('%d %b %Y %I:%M %p')}",
+                    styles['Normal']
+                )
+            )
+
+
+            # SEPARATOR
+
+            content.append(
+                Spacer(1, 12)
             )
 
             content.append(
@@ -300,8 +494,13 @@ def download_report():
             )
 
             content.append(
-                Spacer(1, 10)
+                Spacer(1, 15)
             )
+
+
+    # -------------------------------------------------
+    # FOOTER MESSAGE
+    # -------------------------------------------------
 
     content.append(
         Spacer(1, 20)
@@ -314,6 +513,11 @@ def download_report():
         )
     )
 
+
+    # -------------------------------------------------
+    # BUILD PDF
+    # -------------------------------------------------
+
     doc.build(content)
 
     return send_file(
@@ -321,8 +525,6 @@ def download_report():
         as_attachment=True
     )
 
-#HISTORY ROUTE
-from collections import defaultdict
 
 @app.route('/history')
 def history():
@@ -336,47 +538,160 @@ def history():
         Prediction.created_at.desc()
     ).all()
 
-    grouped_predictions = defaultdict(list)
+    grouped_predictions = {}
 
     for prediction in predictions:
-
-        grouped_predictions[
-            prediction.session_id
-        ].append(prediction)
+        session_predictions = grouped_predictions.get(
+            prediction.session_id,
+            []
+        )
+        session_predictions.append(prediction)
+        grouped_predictions[prediction.session_id] = session_predictions
 
     return render_template(
         'history.html',
         grouped_predictions=grouped_predictions
     )
 
-#SAVE ROUTE
+# SAVE PREDICTIONS ROUTE
 @app.route('/save-predictions', methods=['POST'])
 def save_predictions():
 
     if 'user_id' not in session:
-        return {"message": "Not logged in"}, 401
+        return {
+            "message": "Not logged in"
+        }, 401
 
     data = request.get_json()
 
+    if not data:
+        return {
+            "message": "No prediction data received"
+        }, 400
+
     session_id = str(uuid.uuid4())
 
-    for item in data:
+    try:
 
-        prediction = Prediction(
+        for item in data:
 
-            user_id=session['user_id'],
-            session_id=session_id,
-            course_code=item['course_code'],
-            course_name=item['course_name'],
-            predicted_score=item['predicted_score'],
-            predicted_grade=item['predicted_grade']
+            prediction = Prediction(
+
+                user_id=session['user_id'],
+
+                session_id=session_id,
+
+                course_code=item.get(
+                    'course_code',
+                    ''
+                ),
+
+                course_name=item.get(
+                    'course_name',
+                    ''
+                ),
+
+                assessment_score=float(
+                    item.get(
+                        'assessment_score',
+                        0
+                    )
+                ),
+
+                assessment_weight=float(
+                    item.get(
+                        'assessment_weight',
+                        0
+                    )
+                ),
+
+                assessment_performance=float(
+                    item.get(
+                        'assessment_performance',
+                        0
+                    )
+                ),
+
+                assignment_average=item.get(
+                    'assignment_average'
+                ),
+
+                assignment_weight=item.get(
+                    'assignment_weight',
+                    0
+                ),
+
+                assignment_contribution=item.get(
+                    'assignment_contribution',
+                    0
+                ),
+
+                quiz_average=item.get(
+                    'quiz_average'
+                ),
+
+                quiz_weight=item.get(
+                    'quiz_weight',
+                    0
+                ),
+
+                quiz_contribution=item.get(
+                    'quiz_contribution',
+                    0
+                ),
+
+                project_average=item.get(
+                    'project_average'
+                ),
+
+                project_weight=item.get(
+                    'project_weight',
+                    0
+                ),
+
+                project_contribution=item.get(
+                    'project_contribution',
+                    0
+                ),
+
+                exam_weight=item.get(
+                    'exam_weight',
+                    0
+                ),
+
+                maximum_possible_score=item.get(
+                    'maximum_possible_score',
+                    0
+                ),
+
+                predicted_grade=item.get(
+                    'predicted_grade',
+                    ''
+                )
+            )
+
+            db.session.add(
+                prediction
+            )
+
+        db.session.commit()
+
+        return {
+            "message": "Predictions saved successfully"
+        }
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "Error saving predictions:",
+            e
         )
 
-        db.session.add(prediction)
-
-    db.session.commit()
-
-    return {"message": "Predictions saved"}
+        return {
+            "message": "Error saving predictions"
+        }, 500
 
 #HELP ROUTE
 @app.route('/help')
